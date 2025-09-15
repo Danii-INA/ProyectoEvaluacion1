@@ -5,7 +5,7 @@ Paso 1: Clonar Repositorio Utilizando el comando
 git clone 
 
 Entrar en la carpeta del proyecto:
-cd ProyectoEvaluacion
+cd ProyectoEvaluacion1
 
 Crear el entorno: 
 python -m venv prueba_env
