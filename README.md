@@ -6,10 +6,10 @@ git clone
 
 Entrar en la carpeta del proyecto:
 cd ProyectoEvaluacion1
-
-Crear el entorno: 
-python -m venv prueba_env
-
+----------------------------
+Crear el entorno:         |
+python -m venv prueba_env |
+--------------------------
 Activar entorno
 prueba_env\Scripts\activate
 
