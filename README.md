@@ -6,20 +6,22 @@ git clone
 
 Entrar en la carpeta del proyecto:
 cd ProyectoEvaluacion1
-----------------------------
-Crear el entorno:         |
-python -m venv prueba_env |
---------------------------
-Activar entorno
+
+Crear el entorno:         
+python -m venv prueba_env 
+
+
+Activar entorno:
 prueba_env\Scripts\activate
 
-instalar dependencias
+
+instalar dependencias:
 pip install -r requirements.txt
 
-Migrar (Para que la pagina funcione correctamente)
+Migrar (Para que la pagina funcione correctamente):
 python manage.py migrate
 
-correr
+Iniciar el servidor:
 python manage.py runserver
 
 Iniciar sesión con las credenciales
