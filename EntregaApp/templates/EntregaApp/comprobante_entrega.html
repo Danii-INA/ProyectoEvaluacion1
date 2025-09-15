@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Comprobante de Entrega{% endblock %}
+
+{% block content %}
+<div class="card mt-4">
+    <div class="card-header bg-primary text-white">
+        <h2>Comprobante de Servicio - Clínica del PC</h2>
+    </div>
+    <div class="card-body">
+        {% if equipo %}
+            <h4 class="card-title">Cliente: {{ equipo.cliente }}</h4>
+            <hr>
+            <h5>1. Datos del Equipo</h5>
+            <p><strong>Tipo de Equipo:</strong> {{ equipo.equipo }}</p>
+            <p><strong>Problema Inicial Reportado:</strong> {{ equipo.problema }}</p>
+            <hr>
+            <h5>2. Diagnóstico y Solución Técnica</h5>
+            {% if diagnostico %}
+                <p><strong>Técnico a Cargo:</strong> {{ diagnostico.estudiante }}</p>
+                <p><strong>Diagnóstico:</strong> {{ diagnostico.diagnostico }}</p>
+                <p><strong>Solución Aplicada:</strong> {{ diagnostico.solucion }}</p>
+            {% else %}
+                <p class="text-muted">Sin diagnóstico registrado.</p>
+            {% endif %}
+            <hr>
+            <h5>3. Estado Final de la Entrega</h5>
+            {% if entrega %}
+                <p><strong>Estado:</strong> <span class="badge bg-success">{{ entrega.estado }}</span></p>
+                <p><strong>Observaciones:</strong> {{ entrega.observaciones|default:"Sin observaciones." }}</p>
+            {% else %}
+                 <p class="text-muted">Sin reporte de entrega finalizado.</p>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-danger">No se encontró información para este cliente.</div>
+        {% endif %}
+    </div>
+    <div class="card-footer text-muted">
+        Fecha de emisión: {% now "d/m/Y H:i" %}
+    </div>
+</div>
+<div class="mt-3 text-center">
+     <a href="{% url 'verificar_entrega' %}" class="btn btn-secondary">Volver a Verificación</a>
+</div>
+{% endblock %}

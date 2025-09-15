@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Evaluar Equipo{% endblock %}
+
+{% block content %}
+<h2>Registrar Evaluación Técnica</h2>
+
+<div class="card mt-4">
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="asignacion" class="form-label">Seleccionar Asignación</label>
+                <select class="form-select" id="asignacion" name="asignacion" required>
+                    <option value="" disabled selected>-- Elige una asignación --</option>
+                    {% for asignacion in asignaciones %}
+                        <option value="{{ asignacion.estudiante }} - {{ asignacion.cliente }}">
+                            Técnico: {{ asignacion.estudiante }} | Cliente: {{ asignacion.cliente }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="diagnostico" class="form-label">Diagnóstico Técnico</label>
+                <textarea class="form-control" id="diagnostico" name="diagnostico" rows="3" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="solucion" class="form-label">Solución Aplicada</label>
+                <textarea class="form-control" id="solucion" name="solucion" rows="3" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="tipo_solucion" class="form-label">Tipo de Solución</label>
+                <select class="form-select" id="tipo_solucion" name="tipo_solucion" required>
+                    <option value="Correctiva" selected>Correctiva</option>
+                    <option value="Preventiva">Preventiva</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar Diagnóstico</button>
+        </form>
+
+        {% if mensaje %}
+            <div class="alert alert-success mt-3" role="alert">
+                {{ mensaje }}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Verificar Estado de Equipo{% endblock %}
+
+{% block content %}
+<h2>Verificar Estado de Equipo</h2>
+
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title">Buscar por Nombre de Cliente</h5>
+        <form method="GET" class="row g-3 align-items-center">
+            <div class="col-auto">
+                <input type="text" class="form-control" name="cliente_busqueda" placeholder="Nombre del cliente" required>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if equipo %}
+<a href="{% url 'comprobante_entrega' equipo.cliente %}" class="btn btn-success mt-3">
+    Generar Comprobante
+</a>
+    <div class="card mt-4">
+        <div class="card-header">
+            <h4>Resultados para: {{ equipo.cliente }}</h4>
+        </div>
+        <div class="card-body">
+            <h5>Información del Equipo</h5>
+            <p><strong>Tipo de Equipo:</strong> {{ equipo.equipo }}</p>
+            <p><strong>Problema Reportado:</strong> {{ equipo.problema }}</p>
+            
+            <hr>
+
+            <h5>Diagnóstico Técnico</h5>
+            {% if diagnostico %}
+                <p><strong>Técnico:</strong> {{ diagnostico.estudiante }}</p>
+                <p><strong>Diagnóstico:</strong> {{ diagnostico.diagnostico }}</p>
+                <p><strong>Solución:</strong> {{ diagnostico.solucion }}</p>
+                <p><strong>Tipo:</strong> 
+                    {% if diagnostico.tipo_solucion == 'Correctiva' %}
+                        <span class="badge bg-warning text-dark">Correctiva</span>
+                    {% else %}
+                        <span class="badge bg-info text-dark">Preventiva</span>
+                    {% endif %}
+                </p>
+            {% else %}
+                <div class="alert alert-secondary">
+                    Este equipo aún no ha sido diagnosticado.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% elif not_found %}
+    <div class="alert alert-danger mt-4">
+        {{ not_found }}
+    </div>
+{% endif %}
+
+{% endblock %}

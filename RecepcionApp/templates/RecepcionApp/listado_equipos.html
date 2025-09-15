@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Listado de Equipos Recibidos{% endblock %}
+
+{% block content %}
+<h2>Listado de Equipos Recibidos</h2>
+
+<div class="card mt-4">
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Tipo de Equipo</th>
+                    <th>Problema Reportado</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for equipo in equipos %}
+                <tr>
+                    <td>{{ equipo.cliente }}</td>
+                    <td>{{ equipo.equipo }}</td>
+                    <td>{{ equipo.problema }}</td>
+                    <td><span class="badge bg-primary">{{ equipo.estado }}</span></td>
+                    <td>
+                        <a href="{% url 'detalle_equipo' equipo.cliente %}" class="btn btn-sm btn-info">Ver Detalle</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Aún no se han registrado equipos.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<a href="{% url 'registrar_equipo' %}" class="btn btn-success mt-3">Registrar Nuevo Equipo</a>
+{% endblock %}

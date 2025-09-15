@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Reporte de Entrega{% endblock %}
+
+{% block content %}
+<h2>Registrar Reporte de Entrega</h2>
+
+<div class="card mt-4">
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="cliente" class="form-label">Seleccionar Cliente (Equipo Diagnosticado)</label>
+                <select class="form-select" id="cliente" name="cliente" required>
+                    <option value="" disabled selected>-- Elige un cliente --</option>
+                    {% for diagnostico in diagnosticos %}
+                        <option value="{{ diagnostico.cliente }}">{{ diagnostico.cliente }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="estado_final" class="form-label">Estado Final</label>
+                <select class="form-select" id="estado_final" name="estado_final" required>
+                    <option value="Entregado" selected>Entregado</option>
+                    <option value="Pendiente">Pendiente por Retirar</option>
+                    <option value="No Retirado">No Retirado</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="observaciones" class="form-label">Observaciones (Opcional)</label>
+                <textarea class="form-control" id="observaciones" name="observaciones" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar Reporte</button>
+        </form>
+
+        {% if mensaje %}
+            <div class="alert alert-success mt-3" role="alert">
+                {{ mensaje }}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

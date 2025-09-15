@@ -1,0 +1,12 @@
+# Entorno Virtual
+mi_entorno/
+
+# Base de datos
+db.sqlite3
+
+# Archivos de Python
+__pycache__/
+*.pyc
+
+# Archivos del sistema operativo
+.DS_Store

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Registrar Equipo{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h2>Recepción de Equipos</h2>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="cliente" class="form-label">Nombre del Cliente</label>
+                        <input type="text" class="form-control" id="cliente" name="cliente" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tipo_equipo" class="form-label">Tipo de Equipo (Ej: Notebook, PC de escritorio, etc.)</label>
+                        <input type="text" class="form-control" id="tipo_equipo" name="tipo_equipo" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="problema" class="form-label">Problema Informado por el Cliente</label>
+                        <textarea class="form-control" id="problema" name="problema" rows="3" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Registrar Equipo</button>
+                </form>
+
+                {% if exito %}
+                    <div class="alert alert-success mt-3" role="alert">
+                        {{ exito }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

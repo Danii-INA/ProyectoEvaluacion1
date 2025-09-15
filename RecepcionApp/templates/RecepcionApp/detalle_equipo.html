@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle del Equipo{% endblock %}
+
+{% block content %}
+    <h2>Detalle del Equipo</h2>
+
+    {% if equipo %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title">Cliente: {{ equipo.cliente }}</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Tipo de Equipo:</strong> {{ equipo.equipo }}</p>
+                <p><strong>Problema Reportado:</strong></p>
+                <blockquote class="blockquote">
+                    <p>{{ equipo.problema }}</p>
+                </blockquote>
+                <p><strong>Estado Actual:</strong> <span class="badge bg-primary">{{ equipo.estado }}</span></p>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-danger mt-4" role="alert">
+            No se encontró ningún equipo para el cliente especificado.
+        </div>
+    {% endif %}
+
+    <a href="{% url 'listado_equipos' %}" class="btn btn-secondary mt-3">Volver al Listado</a>
+{% endblock %}
