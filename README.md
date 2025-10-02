@@ -1,4 +1,4 @@
-Proyecto: Sistema de Gestión Clínica del PC
+Proyecto: Sistema de Gestión Clínica del PC (Parte 1)
 Este proyecto es una simulación de un sistema de gestión para la actividad "Clínica del PC" de INACAP, desarrollado como parte de la Evaluación Sumativa 1 de Programación Backend. 
 
 Paso 1: Clonar Repositorio Utilizando el comando
@@ -27,3 +27,5 @@ python manage.py runserver
 Iniciar sesión con las credenciales
 Usuario: inacap
 Contraseña: clinica2025
+
+Parte 2 Evaluacion Backend
