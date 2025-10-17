@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
-{% load static %} {# Carga la librería de archivos estáticos #}
+{% load static %} 
 
 {% block title %}Iniciar Sesión - Clínica del PC{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
     
-    {# Fila para el formulario de login centrado #}
     <div class="row d-flex justify-content-center align-items-center" style="min-height: 80vh;">
         <div class="col-12 col-md-6 col-lg-4">
             <div class="card p-4 shadow-sm border-0">
                 <div class="card-body text-center">
+<img src="{% static 'img/inacaplogohd.png' %}" alt="Logo Inacap" class="mx-auto d-block mb-3" style="height: 60px;">
                     <h1 class="h2 mb-3">CLINICA PC</h1>
                     <h2 class="h5 mb-4 text-muted">Iniciar Sesión</h2>
 
