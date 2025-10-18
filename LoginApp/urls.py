@@ -5,4 +5,5 @@ from . import views
 urlpatterns = [
     # La ruta vacía ('') dentro de esta app muestra la vista de login.
     path('', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout')
 ]

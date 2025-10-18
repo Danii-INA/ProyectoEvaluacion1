@@ -1,18 +1,21 @@
 <!doctype html>
-{% load static %} 
-
-<a class="navbar-brand" href="{% url 'listado_equipos' %}"></a>
 <html lang="es">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Clínica del PC - {% block title %}{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    {% load static %}
 </head>
 <body>
+
+    {# Condición para ocultar la barra de navegacion en el login #}
     {% if request.resolver_match.url_name != 'login' %}
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark"> {# <-- Se agregó bg-dark para que la barra sea visible #}
         <div class="container">
+            <a class="navbar-brand" href="{% url 'listado_equipos' %}">
+                <img src="{% static 'img/inacaplogohd.png' %}" alt="Logo Inacap" style="height: 60px;">
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -42,15 +45,29 @@
                         </ul>
                     </li>
                 </ul>
+
+                {# --- BLOQUE NUEVO PARA CERRAR SESIÓN --- #}
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <span class="nav-link text-white me-2">Hola, {{ request.session.username|default:"Usuario" }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light" href="{% url 'logout' %}">Cerrar Sesión</a>
+                    </li>
+                </ul>
+                {# --- FIN DEL BLOQUE NUEVO --- #}
+
                 {% endif %}
             </div>
         </div>
     </nav>
     {% endif %}
+
     <div class="container mt-4">
         {% block content %}
         {% endblock %}
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
