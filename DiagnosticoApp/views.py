@@ -10,23 +10,27 @@ def asignar_tecnico(request):
     if not request.session.get('autenticado'):
         return redirect('login')
 
-    mensaje = None
+    mensaje = None # Esta variable ya no se usará
     if 'estudiante' in request.GET and 'equipo_cliente' in request.GET:
         estudiante = request.GET.get('estudiante')
         cliente_equipo = request.GET.get('equipo_cliente')
 
         nueva_asignacion = { "estudiante": estudiante, "cliente": cliente_equipo }
         asignaciones.append(nueva_asignacion)
-        mensaje = f"¡Equipo de {cliente_equipo} asignado a {estudiante} exitosamente!"
 
-    contexto = { 'equipos': equipos_recibidos, 'mensaje': mensaje }
+        # Redirigimos a la página de evaluar.
+        return redirect(f"/diagnostico/evaluar/?cliente={cliente_equipo}&estudiante={estudiante}")
+
+    # Si la petición es GET pero SIN datos (solo cargar la página), muestra el formulario
+    contexto = { 'equipos': equipos_recibidos }
     return render(request, 'DiagnosticoApp/asignar_tecnico.html', contexto)
 
 def evaluar_equipo(request):
     if not request.session.get('autenticado'):
         return redirect('login')
 
-    mensaje = None
+    # mensaje = None # Ya no se necesita
+
     if request.method == 'POST':
         asignacion_str = request.POST.get('asignacion')
         diagnostico_txt = request.POST.get('diagnostico')
@@ -34,19 +38,28 @@ def evaluar_equipo(request):
         tipo_solucion = request.POST.get('tipo_solucion')
 
         # Extraemos el nombre del estudiante y del cliente
-        estudiante, cliente = asignacion_str.split(' - ')
+        try: # Añadí un try/except para más seguridad
+            estudiante, cliente = asignacion_str.split(' - ')
+        except ValueError:
+             # Si el formato es incorrecto, vuelve a mostrar el formulario con un error
+             contexto = { 'asignaciones': asignaciones, 'error': 'Formato de asignación inválido.' }
+             return render(request, 'DiagnosticoApp/evaluar_equipo.html', contexto)
+
 
         nuevo_diagnostico = {
-            "estudiante": estudiante,
-            "cliente": cliente,
+            "estudiante": estudiante.strip(),
+            "cliente": cliente.strip(),
             "diagnostico": diagnostico_txt,
             "solucion": solucion_txt,
             "tipo_solucion": tipo_solucion
         }
         diagnosticos_realizados.append(nuevo_diagnostico)
-        mensaje = f"Diagnóstico para el equipo de {cliente} guardado correctamente."
+        # --- Mejora en el flujo :D ---
+        # Redirigimos a la página de registrar entrega.
+        return redirect(f"/entrega/reporte/?cliente={cliente.strip()}")
 
-    contexto = { 'asignaciones': asignaciones, 'mensaje': mensaje }
+    # Si la petición es GET (solo cargar la página), muestra el formulario
+    contexto = { 'asignaciones': asignaciones }
     return render(request, 'DiagnosticoApp/evaluar_equipo.html', contexto)
 
 

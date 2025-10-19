@@ -29,8 +29,10 @@ def registrar_equipo(request):
 
         # Preparamos un mensaje de confirmación para mostrarlo en la página
         mensaje_exito = "¡Equipo registrado exitosamente!"
+        # Redirigimos a la página de asignar, pasando el nombre del cliente
+        return redirect(f"/diagnostico/asignar/?equipo_cliente={cliente}")
 
-    return render(request, 'RecepcionApp/registrar_equipo.html', {'exito': mensaje_exito})
+    return render(request, 'RecepcionApp/registrar_equipo.html')
 
 # Mantenemos las otras vistas como esqueletos por ahora
 def listado_equipos(request):
