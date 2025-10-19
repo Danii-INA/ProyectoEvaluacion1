@@ -34,7 +34,7 @@ def reporte_entrega(request):
     if not request.session.get('autenticado'):
         return redirect('login')
 
-    mensaje = None
+    # --- (Procesar el formulario) ---
     if request.method == 'POST':
         cliente = request.POST.get('cliente')
         estado_final = request.POST.get('estado_final')
@@ -48,9 +48,11 @@ def reporte_entrega(request):
                 equipo['estado'] = estado_final
                 break
         
-        mensaje = f"Reporte para el equipo de {cliente} guardado como '{estado_final}'."
+        # redirige la página de verificar
+        return redirect(f"/entrega/verificar/?cliente_busqueda={cliente}")
 
-    contexto = { 'diagnosticos': diagnosticos_realizados, 'mensaje': mensaje }
+    # --- Lógica para GET (Mostrar el formulario) ---
+    contexto = { 'diagnosticos': diagnosticos_realizados }
     return render(request, 'EntregaApp/reporte_entrega.html', contexto)
 
 def comprobante_entrega(request, cliente):

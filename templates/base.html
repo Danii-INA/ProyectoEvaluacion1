@@ -37,13 +37,13 @@
                             <li><a class="dropdown-item" href="{% url 'listado_diagnosticos' %}">Ver Diagnósticos</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Entrega</a>
-                        <ul class="dropdown-menu">
-                             <li><a class="dropdown-item" href="{% url 'verificar_entrega' %}">Verificar Estado</a></li>
-                             <li><a class="dropdown-item" href="{% url 'reporte_entrega' %}">Registrar Entrega</a></li>
-                        </ul>
-                    </li>
+                   <li class="nav-item dropdown">
+                   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Entrega</a>
+                   <ul class="dropdown-menu">
+                   <li><a class="dropdown-item" href="{% url 'reporte_entrega' %}">Registrar Entrega</a></li>
+                   <li><a class="dropdown-item" href="{% url 'verificar_entrega' %}">Verificar Estado</a></li>
+                   </ul>
+                   </li>
                 </ul>
 
                 {# --- BLOQUE NUEVO PARA CERRAR SESIÓN --- #}
