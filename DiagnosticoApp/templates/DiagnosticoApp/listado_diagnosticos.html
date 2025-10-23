@@ -19,9 +19,9 @@
             <tbody>
                 {% for diagnostico in diagnosticos %}
                 <tr>
-                    <td>{{ diagnostico.cliente }}</td>
+                    <td>{{ diagnostico.equipo.cliente }}</td> 
                     <td>{{ diagnostico.estudiante }}</td>
-                    <td>{{ diagnostico.diagnostico }}</td>
+                    <td>{{ diagnostico.diagnostico_problema }}</td> 
                     <td>
                         {% if diagnostico.tipo_solucion == 'Correctiva' %}
                             <span class="badge bg-warning text-dark">Correctiva</span>

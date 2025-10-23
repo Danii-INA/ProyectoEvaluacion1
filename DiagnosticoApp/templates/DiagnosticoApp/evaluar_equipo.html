@@ -9,17 +9,19 @@
     <div class="card-body">
         <form method="POST">
             {% csrf_token %}
+
+
             <div class="mb-3">
-                <label for="asignacion" class="form-label">Seleccionar Asignación</label>
-                <select class="form-select" id="asignacion" name="asignacion" required>
-                    <option value="" disabled selected>-- Elige una asignación --</option>
-                    {% for asignacion in asignaciones %}
-                        <option value="{{ asignacion.estudiante }} - {{ asignacion.cliente }}">
-                            Técnico: {{ asignacion.estudiante }} | Cliente: {{ asignacion.cliente }}
-                        </option>
-                    {% endfor %}
-                </select>
+                <label for="estudiante" class="form-label">Nombre del Estudiante/Técnico</label>
+                <input type="text" class="form-control" id="estudiante" name="estudiante" required>
             </div>
+            {% if equipo %}
+            <div class="mb-3">
+                <label class="form-label">Problema Reportado por Cliente:</label>
+                <p class="form-control-plaintext border p-2 rounded bg-light">{{ equipo.problema }}</p>
+                </div>
+                <input type="hidden" name="equipo_id" value="{{ equipo.id }}">
+                {% endif %}
 
             <div class="mb-3">
                 <label for="diagnostico" class="form-label">Diagnóstico Técnico</label>
@@ -42,9 +44,9 @@
             <button type="submit" class="btn btn-primary">Guardar Diagnóstico</button>
         </form>
 
-        {% if mensaje %}
-            <div class="alert alert-success mt-3" role="alert">
-                {{ mensaje }}
+        {% if error %} 
+            <div class="alert alert-danger mt-3" role="alert">
+                {{ error }}
             </div>
         {% endif %}
     </div>
