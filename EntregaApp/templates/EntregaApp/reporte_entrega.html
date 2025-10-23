@@ -14,7 +14,7 @@
                 <select class="form-select" id="cliente" name="cliente" required>
                     <option value="" disabled selected>-- Elige un cliente --</option>
                     {% for diagnostico in diagnosticos %}
-                        <option value="{{ diagnostico.cliente }}">{{ diagnostico.cliente }}</option>
+                        <option value="{{ diagnostico.equipo.cliente }}">{{ diagnostico.equipo.cliente }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -37,7 +37,7 @@
         </form>
 
         {% if mensaje %}
-            <div class="alert alert-success mt-3" role="alert">
+            <div class="alert {% if is_error %}alert-danger{% else %}alert-success{% endif %} mt-3" role="alert">
                 {{ mensaje }}
             </div>
         {% endif %}

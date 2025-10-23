@@ -3,33 +3,21 @@
 {% block title %}Asignar Técnico{% endblock %}
 
 {% block content %}
-<h2>Asignar Técnico a Equipo</h2>
+<h2>Seleccionar Equipo para Evaluar</h2>
 
 <div class="card mt-4">
     <div class="card-body">
-        <form method="GET" action="{% url 'asignar_tecnico' %}">
-            <div class="mb-3">
-                <label for="estudiante" class="form-label">Nombre del Estudiante/Técnico</label>
-                <input type="text" class="form-control" id="estudiante" name="estudiante" required>
+        <h5 class="card-title">Equipos Pendientes a Evaluar</h5>
+        {% if equipos %}
+            <div class="list-group">
+                {% for equipo in equipos %}
+                    <a href="{% url 'evaluar_equipo' %}?equipo_id={{ equipo.id }}" class="list-group-item list-group-item-action">
+                        Cliente: <strong>{{ equipo.cliente }}</strong> ({{ equipo.tipo_equipo }}) - Recibido: {{ equipo.fecha_recepcion|date:"d/m/Y H:i" }}
+                    </a>
+                {% endfor %}
             </div>
-
-            <div class="mb-3">
-                <label for="equipo_cliente" class="form-label">Seleccionar Equipo (Cliente)</label>
-                <select class="form-select" id="equipo_cliente" name="equipo_cliente" required>
-                    <option value="" disabled selected>-- Elige un equipo --</option>
-                    {% for equipo in equipos %}
-                        <option value="{{ equipo.cliente }}">{{ equipo.cliente }} - ({{ equipo.equipo }})</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Asignar Equipo</button>
-        </form>
-
-        {% if mensaje %}
-            <div class="alert alert-success mt-3" role="alert">
-                {{ mensaje }}
-            </div>
+        {% else %}
+            <p class="text-muted">No hay equipos pendientes a diagnosticar.</p>
         {% endif %}
     </div>
 </div>

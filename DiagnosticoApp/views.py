@@ -1,71 +1,66 @@
 # DiagnosticoApp/views.py
 from django.shortcuts import render, redirect
-from RecepcionApp.views import equipos_recibidos
-
-# Listas que simulan base de datos
-asignaciones = []
-diagnosticos_realizados = []
+from RecepcionApp.models import Equipo 
+from .models import Diagnostico      
 
 def asignar_tecnico(request):
     if not request.session.get('autenticado'):
         return redirect('login')
-
-    mensaje = None # Esta variable ya no se usará
-    if 'estudiante' in request.GET and 'equipo_cliente' in request.GET:
-        estudiante = request.GET.get('estudiante')
-        cliente_equipo = request.GET.get('equipo_cliente')
-
-        nueva_asignacion = { "estudiante": estudiante, "cliente": cliente_equipo }
-        asignaciones.append(nueva_asignacion)
-
-        # Redirigimos a la página de evaluar.
-        return redirect(f"/diagnostico/evaluar/?cliente={cliente_equipo}&estudiante={estudiante}")
-
-    # Si la petición es GET pero SIN datos (solo cargar la página), muestra el formulario
-    contexto = { 'equipos': equipos_recibidos }
+    equipos_pendientes = Equipo.objects.filter(estado='Recibido')
+    contexto = { 'equipos': equipos_pendientes }
     return render(request, 'DiagnosticoApp/asignar_tecnico.html', contexto)
+
 
 def evaluar_equipo(request):
     if not request.session.get('autenticado'):
         return redirect('login')
 
-    # mensaje = None # Ya no se necesita
-
     if request.method == 'POST':
-        asignacion_str = request.POST.get('asignacion')
+        equipo_id = request.POST.get('equipo_id')
+        estudiante = request.POST.get('estudiante')
         diagnostico_txt = request.POST.get('diagnostico')
         solucion_txt = request.POST.get('solucion')
         tipo_solucion = request.POST.get('tipo_solucion')
+        
+        try:
+            equipo_obj = Equipo.objects.get(id=equipo_id)
+            
+            nuevo_diagnostico = Diagnostico(
+                equipo=equipo_obj,
+                estudiante=estudiante,
+                diagnostico_problema=diagnostico_txt,
+                solucion=solucion_txt,
+                tipo_solucion=tipo_solucion
+            )
+            nuevo_diagnostico.save()
+            
+            equipo_obj.estado = 'Diagnosticado'
+            equipo_obj.save()
+            return redirect(f"/entrega/reporte/?cliente={equipo_obj.cliente}")
+        
+        except Equipo.DoesNotExist:
+            contexto = { 'equipos_pendientes': Equipo.objects.filter(estado='Recibido'), 'error': 'Equipo no encontrado.' }
+            return render(request, 'DiagnosticoApp/evaluar_equipo.html', contexto)
 
-        # Extraemos el nombre del estudiante y del cliente
-        try: # Añadí un try/except para más seguridad
-            estudiante, cliente = asignacion_str.split(' - ')
-        except ValueError:
-             # Si el formato es incorrecto, vuelve a mostrar el formulario con un error
-             contexto = { 'asignaciones': asignaciones, 'error': 'Formato de asignación inválido.' }
-             return render(request, 'DiagnosticoApp/evaluar_equipo.html', contexto)
-
-
-        nuevo_diagnostico = {
-            "estudiante": estudiante.strip(),
-            "cliente": cliente.strip(),
-            "diagnostico": diagnostico_txt,
-            "solucion": solucion_txt,
-            "tipo_solucion": tipo_solucion
+    equipo_a_evaluar = None
+    error_get = None
+    equipo_id_get = request.GET.get('equipo_id')
+    if not equipo_id_get:
+        return redirect('asignar_tecnico')
+    
+    try:
+        equipo_a_evaluar = Equipo.objects.get(id=equipo_id_get, estado='Recibido')
+        contexto = {
+            'equipo': equipo_a_evaluar,
         }
-        diagnosticos_realizados.append(nuevo_diagnostico)
-        # --- Mejora en el flujo :D ---
-        # Redirigimos a la página de registrar entrega.
-        return redirect(f"/entrega/reporte/?cliente={cliente.strip()}")
-
-    # Si la petición es GET (solo cargar la página), muestra el formulario
-    contexto = { 'asignaciones': asignaciones }
-    return render(request, 'DiagnosticoApp/evaluar_equipo.html', contexto)
-
-
+        return render(request, 'DiagnosticoApp/evaluar_equipo.html', contexto) 
+    except Equipo.DoesNotExist:
+        return redirect('asignar_tecnico')
+  
 def listado_diagnosticos(request):
     if not request.session.get('autenticado'):
         return redirect('login')
     
-    contexto = { 'diagnosticos': diagnosticos_realizados }
+    todos_los_diagnosticos = Diagnostico.objects.all()
+    contexto = { 'diagnosticos': todos_los_diagnosticos }
     return render(request, 'DiagnosticoApp/listado_diagnosticos.html', contexto)

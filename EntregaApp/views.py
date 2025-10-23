@@ -1,10 +1,7 @@
-# EntregaApp/views.py
 from django.shortcuts import render, redirect
-
-from RecepcionApp.views import equipos_recibidos
-from DiagnosticoApp.views import diagnosticos_realizados
-
-entregas_finalizadas = []
+from RecepcionApp.models import Equipo
+from DiagnosticoApp.models import Diagnostico
+from .models import Entrega
 
 def verificar_entrega(request):
     if not request.session.get('autenticado'):
@@ -14,56 +11,74 @@ def verificar_entrega(request):
 
     if 'cliente_busqueda' in request.GET:
         cliente_a_buscar = request.GET.get('cliente_busqueda')
-        for equipo in equipos_recibidos:
-            if equipo['cliente'].lower() == cliente_a_buscar.lower():
-                equipo_encontrado = equipo
-                break
-        
-        if equipo_encontrado:
-            for diagnostico in diagnosticos_realizados:
-                if diagnostico['cliente'].lower() == cliente_a_buscar.lower():
-                    diagnostico_encontrado = diagnostico
-                    break
-        else:
+        try:
+            equipo_encontrado = Equipo.objects.get(cliente__iexact=cliente_a_buscar)
+            diagnostico_encontrado = Diagnostico.objects.filter(equipo=equipo_encontrado).last()
+        except Equipo.DoesNotExist:
             mensaje_error = f"No se encontró ningún equipo registrado para el cliente '{cliente_a_buscar}'."
 
-    contexto = { 'equipo': equipo_encontrado, 'diagnostico': diagnostico_encontrado, 'not_found': mensaje_error }
+    contexto = {
+        'equipo': equipo_encontrado,
+        'diagnostico': diagnostico_encontrado,
+        'not_found': mensaje_error
+    }
     return render(request, 'EntregaApp/verificar_entrega.html', contexto)
+
 
 def reporte_entrega(request):
     if not request.session.get('autenticado'):
         return redirect('login')
 
-    # --- (Procesar el formulario) ---
     if request.method == 'POST':
         cliente = request.POST.get('cliente')
         estado_final = request.POST.get('estado_final')
         observaciones = request.POST.get('observaciones')
 
-        nuevo_reporte = { "cliente": cliente, "estado": estado_final, "observaciones": observaciones }
-        entregas_finalizadas.append(nuevo_reporte)
+        try:
+            equipo_obj = Equipo.objects.get(cliente=cliente)
 
-        for equipo in equipos_recibidos:
-            if equipo['cliente'] == cliente:
-                equipo['estado'] = estado_final
-                break
-        
-        # redirige la página de verificar
-        return redirect(f"/entrega/verificar/?cliente_busqueda={cliente}")
+            entrega_obj, created = Entrega.objects.get_or_create(
+                equipo=equipo_obj,
+                defaults={'estado_final': estado_final, 'observaciones': observaciones}
+            )
+            if not created:
+                entrega_obj.estado_final = estado_final
+                entrega_obj.observaciones = observaciones
+                entrega_obj.save()
 
-    # --- Lógica para GET (Mostrar el formulario) ---
-    contexto = { 'diagnosticos': diagnosticos_realizados }
+            equipo_obj.estado = estado_final
+            equipo_obj.save()
+
+            return redirect(f"/entrega/verificar/?cliente_busqueda={cliente}")
+
+        except Equipo.DoesNotExist:
+            mensaje = f"Error: No se encontró equipo para el cliente '{cliente}'."
+            diagnosticos_con_equipo = Diagnostico.objects.select_related('equipo').all()
+            
+            contexto = { 
+                        'diagnosticos': diagnosticos_con_equipo, 
+                        'mensaje': mensaje,
+                        'is_error': True 
+                        } 
+            return render(request, 'EntregaApp/reporte_entrega.html', contexto)
+
+    diagnosticos_con_equipo = Diagnostico.objects.select_related('equipo').filter(equipo__estado='Diagnosticado')
+    contexto = { 'diagnosticos': diagnosticos_con_equipo }
     return render(request, 'EntregaApp/reporte_entrega.html', contexto)
+
+
 
 def comprobante_entrega(request, cliente):
     if not request.session.get('autenticado'):
         return redirect('login')
 
-    # Buscamos toda la información del cliente especificado en la URL
-    equipo_info = next((eq for eq in equipos_recibidos if eq['cliente'] == cliente), None)
-    diagnostico_info = next((diag for diag in diagnosticos_realizados if diag['cliente'] == cliente), None)
-    entrega_info = next((ent for ent in entregas_finalizadas if ent['cliente'] == cliente), None)
-
+    try:
+        equipo_info = Equipo.objects.get(cliente__iexact=cliente)
+        diagnostico_info = Diagnostico.objects.filter(equipo=equipo_info).last()
+        entrega_info = Entrega.objects.filter(equipo=equipo_info).first()
+    except Equipo.DoesNotExist:
+        equipo_info, diagnostico_info, entrega_info = None, None, None
+        
     contexto = {
         'equipo': equipo_info,
         'diagnostico': diagnostico_info,

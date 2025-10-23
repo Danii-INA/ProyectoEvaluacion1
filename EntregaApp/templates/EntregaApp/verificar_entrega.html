@@ -29,7 +29,7 @@
         </div>
         <div class="card-body">
             <h5>Información del Equipo</h5>
-            <p><strong>Tipo de Equipo:</strong> {{ equipo.equipo }}</p>
+            <p><strong>Tipo de Equipo:</strong> {{ equipo.tipo_equipo }}</p>
             <p><strong>Problema Reportado:</strong> {{ equipo.problema }}</p>
             
             <hr>
@@ -37,7 +37,7 @@
             <h5>Diagnóstico Técnico</h5>
             {% if diagnostico %}
                 <p><strong>Técnico:</strong> {{ diagnostico.estudiante }}</p>
-                <p><strong>Diagnóstico:</strong> {{ diagnostico.diagnostico }}</p>
+                <p><strong>Diagnóstico:</strong> {{ diagnostico.diagnostico_problema }}</p>
                 <p><strong>Solución:</strong> {{ diagnostico.solucion }}</p>
                 <p><strong>Tipo:</strong> 
                     {% if diagnostico.tipo_solucion == 'Correctiva' %}
