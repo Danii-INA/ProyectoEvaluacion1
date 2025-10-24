@@ -14,13 +14,18 @@ para que el proyecto se abra en visual studio
 
 PASO 2 - Crear archivo .env en la raíz del proyecto.
 
-Poner datos de la base de dato PostgreSQL
+Poner datos de la base de datos PostgreSQL
+---------------------
 DB_NAME=
+--------------------
 DB_USER=
+---------------------
 DB_PASSWORD=
+----------------------
 DB_HOST=localhost
+----------------------
 DB_PORT=
-
+----------------------
 PASO 3 - Crear y Activar un Entorno Virtual
 Crear el entorno:         
 python -m venv prueba_env 
