@@ -39,3 +39,10 @@ def detalle_equipo(request, nombre):
     except Equipo.DoesNotExist:
         equipo_encontrado = None
     return render(request, 'RecepcionApp/detalle_equipo.html', {'equipo': equipo_encontrado})
+
+from rest_framework import viewsets
+from .serializers import EquipoSerializer
+
+class EquipoViewSet(viewsets.ModelViewSet):
+    queryset = Equipo.objects.all()
+    serializer_class = EquipoSerializer

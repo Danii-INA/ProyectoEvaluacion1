@@ -64,3 +64,10 @@ def listado_diagnosticos(request):
     todos_los_diagnosticos = Diagnostico.objects.all()
     contexto = { 'diagnosticos': todos_los_diagnosticos }
     return render(request, 'DiagnosticoApp/listado_diagnosticos.html', contexto)
+
+from rest_framework import viewsets
+from .serializers import DiagnosticoSerializer
+
+class DiagnosticoViewSet(viewsets.ModelViewSet):
+    queryset = Diagnostico.objects.all()
+    serializer_class = DiagnosticoSerializer

@@ -85,3 +85,10 @@ def comprobante_entrega(request, cliente):
         'entrega': entrega_info
     }
     return render(request, 'EntregaApp/comprobante_entrega.html', contexto)
+
+from rest_framework import viewsets
+from .serializers import EntregaSerializer
+
+class EntregaViewSet(viewsets.ModelViewSet):
+    queryset = Entrega.objects.all()
+    serializer_class = EntregaSerializer

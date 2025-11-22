@@ -1,19 +1,27 @@
-# SistemaGestion/urls.py
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import RedirectView # Importa la vista de redirección
+from rest_framework.routers import DefaultRouter
+
+
+from RecepcionApp.views import EquipoViewSet
+from DiagnosticoApp.views import DiagnosticoViewSet
+from EntregaApp.views import EntregaViewSet
+
+
+router = DefaultRouter()
+router.register(r'equipos', EquipoViewSet)
+router.register(r'diagnosticos', DiagnosticoViewSet)
+router.register(r'entregas', EntregaViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
 
-    # 1. Cuando alguien visite la raíz (''), se redirige automaticamente a '/login/'.
-    path('', RedirectView.as_view(url='/login/', permanent=True)),
-
-    # 2. Cuando alguien visite '/login/', usa el mapa de la LoginApp.
-    path('login/', include('LoginApp.urls')),
-
-    # Rutas para las otras apps
+    path('', include('LoginApp.urls')),
     path('recepcion/', include('RecepcionApp.urls')),
     path('diagnostico/', include('DiagnosticoApp.urls')),
     path('entrega/', include('EntregaApp.urls')),
+
+
+    path('api/', include(router.urls)),
 ]
