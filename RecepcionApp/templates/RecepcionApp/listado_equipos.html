@@ -21,11 +21,21 @@
                 {% for equipo in equipos %}
                 <tr>
                     <td>{{ equipo.cliente }}</td>
-                    <td>{{ equipo.equipo }}</td>
+                    <td>{{ equipo.tipo_equipo }}</td> 
                     <td>{{ equipo.problema }}</td>
                     <td><span class="badge bg-primary">{{ equipo.estado }}</span></td>
                     <td>
+                        
                         <a href="{% url 'detalle_equipo' equipo.cliente %}" class="btn btn-sm btn-info">Ver Detalle</a>
+
+                        <a href="{% url 'editar_equipo' equipo.id %}" class="btn btn-warning btn-sm ms-1">Editar</a>
+
+                        <a href="{% url 'eliminar_equipo' equipo.id %}" 
+                           class="btn btn-danger btn-sm ms-1" 
+                           onclick="return confirm('¿Estás seguro de que quieres eliminar este equipo?');">
+                           Eliminar
+                        </a>
+                        
                     </td>
                 </tr>
                 {% empty %}

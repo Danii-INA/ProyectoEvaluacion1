@@ -1,4 +1,3 @@
-# RecepcionApp/views.py
 from django.shortcuts import render, redirect
 from .models import Equipo
 
@@ -46,3 +45,39 @@ from .serializers import EquipoSerializer
 class EquipoViewSet(viewsets.ModelViewSet):
     queryset = Equipo.objects.all()
     serializer_class = EquipoSerializer
+    
+    
+def eliminar_equipo(request, id):
+    
+    if not request.session.get('autenticado'):
+        return redirect('login')
+    
+    
+    try:
+        equipo = Equipo.objects.get(id=id)
+        equipo.delete() 
+    except Equipo.DoesNotExist:
+        pass 
+    
+   
+    return redirect('listado_equipos')
+
+
+def editar_equipo(request, id):
+    if not request.session.get('autenticado'):
+        return redirect('login')
+
+    try:
+        equipo = Equipo.objects.get(id=id)
+    except Equipo.DoesNotExist:
+        return redirect('listado_equipos') 
+
+    if request.method == 'POST':
+        equipo.cliente = request.POST.get('cliente')
+        equipo.tipo_equipo = request.POST.get('tipo_equipo')
+        equipo.problema = request.POST.get('problema')
+        
+        equipo.save() 
+        return redirect('listado_equipos') 
+
+    return render(request, 'RecepcionApp/editar_equipo.html', {'equipo': equipo})

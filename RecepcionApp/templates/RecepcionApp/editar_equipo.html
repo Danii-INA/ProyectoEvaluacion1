@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Equipo{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card mt-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Editar Equipo de {{ equipo.cliente }}</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="cliente" class="form-label">Nombre del Cliente</label>
+                        <input type="text" class="form-control" id="cliente" name="cliente" 
+                               value="{{ equipo.cliente }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tipo_equipo" class="form-label">Tipo de Equipo</label>
+                        <input type="text" class="form-control" id="tipo_equipo" name="tipo_equipo" 
+                               value="{{ equipo.tipo_equipo }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="problema" class="form-label">Problema Reportado</label>
+                        <textarea class="form-control" id="problema" name="problema" rows="3" required>{{ equipo.problema }}</textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'listado_equipos' %}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
